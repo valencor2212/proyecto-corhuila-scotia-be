@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import CorhuilaApp.CorhuilaApp.Entity.Teachers;
-import CorhuilaApp.CorhuilaApp.Services.FacultyService;
-import CorhuilaApp.CorhuilaApp.Services.PeriodService;
-import CorhuilaApp.CorhuilaApp.Services.ProgramService;
 import CorhuilaApp.CorhuilaApp.Services.TeachersService;
 import CorhuilaApp.auxClass.TeacherInfoDTO;
 import CorhuilaApp.auxClass.TeacherRegistrationRequest;
@@ -28,15 +25,6 @@ public class TeachersController {
 
     @Autowired
     private TeachersService teachersService;
-
-    @Autowired
-    private ProgramService programService;
-
-    @Autowired
-    private FacultyService facultyService;
-
-    @Autowired
-    private PeriodService periodService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -47,11 +35,6 @@ public class TeachersController {
             newTeacher.setUsername(request.getUsername());
             newTeacher.setPassword(request.getPassword());
             newTeacher.setNombre(request.getNombre());
-
-            // Establecer relaciones
-            newTeacher.setAcademicProgram(programService.findById(request.getProgramId()).orElse(null));
-            newTeacher.setFaculty(facultyService.findById(request.getFacultyId()).orElse(null));
-            newTeacher.setAcademicPeriod(periodService.findById(request.getAcademicPeriodId()).orElse(null));
 
             // Guardar el profesor en la base de datos
             Teachers registeredTeacher = teachersService.register(newTeacher);
