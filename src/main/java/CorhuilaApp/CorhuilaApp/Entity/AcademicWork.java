@@ -48,5 +48,8 @@ public class AcademicWork {
 
     @Column(name = "campus", nullable = true)
     private String campus;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", nullable = true)
+    private Teachers teacher;
 
 }

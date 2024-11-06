@@ -48,18 +48,18 @@ public class TeachersController {
     // Endpoint para autenticar un profesor
     @PostMapping("/login")
     public ResponseEntity<?> authenticateTeacher(@RequestBody TeacherRegistrationRequest loginData) {
-        Optional<Teachers> teachers = teachersService.authenticate(loginData.getUsername(),
-                loginData.getPassword());
-        if (teachers.isPresent()) {
-            // Generar el token JWT
-            String token = jwtTokenUtil.generateToken(loginData.getUsername());
-            return ResponseEntity.ok(new AuthResponse(token, teachers.get().getUsername(), teachers.get().getNombre()));
+        Optional<Teachers> teacher = teachersService.authenticate(loginData.getUsername(), loginData.getPassword());
+        if (teacher.isPresent()) {
+            Teachers loggedTeacher = teacher.get();
+            String token = jwtTokenUtil.generateToken(loggedTeacher.getUsername());
+            
+            
+            return ResponseEntity.ok(new AuthResponse(token, loggedTeacher.getUsername(), loggedTeacher.getNombre(), loggedTeacher.getId()));
         } else {
             return ResponseEntity.status(401).body("Credenciales inválidas");
         }
     }
 
-    // Endpoint para obtener un profesor por ID
     @GetMapping("/{id}")
     public ResponseEntity<TeacherInfoDTO> getTeacherById(@PathVariable Long id) {
         Optional<Teachers> teacher = teachersService.getTeachersById(id);
@@ -83,11 +83,13 @@ public class TeachersController {
         private String token;
         private String username;
         private String nombre;
+        private Long teacherId;
 
-        public AuthResponse(String token, String username, String nombre) {
+        public AuthResponse(String token, String username, String nombre, Long teacherId) {
             this.token = token;
             this.username = username;
             this.nombre = nombre;
+            this.teacherId = teacherId;
         }
 
         public String getToken() {
@@ -112,6 +114,9 @@ public class TeachersController {
 
         public void setNombre(String nombre) {
             this.nombre = nombre;
+        }
+        public Long getTeacherId() {
+            return teacherId;
         }
     }
 }
