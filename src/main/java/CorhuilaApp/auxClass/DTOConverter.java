@@ -29,7 +29,6 @@ public class DTOConverter {
         ProductoDTO dto = new ProductoDTO();
         dto.setNombre(producto.getNombre());
         dto.setDescripcion(producto.getDescripcion());
-        dto.setAcademicWorkId(producto.getAcademicWork().getId());
         return dto;
     }
 

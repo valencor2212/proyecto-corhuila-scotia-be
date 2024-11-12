@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "Groups")
+@Table(name = "`groups`")
 public class Group {
 
     @Id
@@ -15,7 +15,7 @@ public class Group {
     @Column(name = "group_number", nullable = false)
     private Integer groupNumber; // Número o identificador del grupo
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject; // Relación con la asignatura
 

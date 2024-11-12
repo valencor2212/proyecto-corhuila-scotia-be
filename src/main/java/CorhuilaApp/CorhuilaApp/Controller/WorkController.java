@@ -23,16 +23,18 @@ import java.util.Optional;
 public class WorkController {
 
     private final WorkService workService;
-    
-private TeachersService teachersService;
 
-@Autowired
+    private TeachersService teachersService;
+
+    @Autowired
     public WorkController(WorkService workService, TeachersService teachersService) {
         this.workService = workService;
         this.teachersService = teachersService;
     }
+
     @PostMapping("/register")
-    public ResponseEntity<AcademicWork> registerWork(@RequestBody AcademicWork academicWork, @RequestParam Long teacherId) {
+    public ResponseEntity<AcademicWork> registerWork(@RequestBody AcademicWork academicWork,
+            @RequestParam Long teacherId) {
         // Obtener el objeto Teachers a partir del teacherId
         Teachers teacher = teachersService.getTeachersById(teacherId)
                 .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
@@ -41,8 +43,6 @@ private TeachersService teachersService;
         return new ResponseEntity<>(registeredWork, HttpStatus.CREATED);
     }
 
-
-   
     @GetMapping("/{id}")
     public ResponseEntity<AcademicWorkDTO> getWorkById(@PathVariable Long id) {
         Optional<AcademicWork> work = workService.findById(id);
@@ -59,40 +59,39 @@ private TeachersService teachersService;
 
     @GetMapping("/updated-by-teacher")
     public ResponseEntity<List<AcademicWorkDTO>> getUpdatedWorksByTeacher(@RequestParam Long teacherId) {
-        // Verificar si el teacherId es válido y obtener sus WORKS actualizados
+
         List<AcademicWork> updatedWorks = workService.getUpdatedWorksByTeacher(teacherId);
-        
-        // Convertir las entidades a DTOs
+
         List<AcademicWorkDTO> workDTOs = DTOConverter.toAcademicWorkDTOList(updatedWorks);
-        
+
         return ResponseEntity.ok(workDTOs);
     }
+
     @PutMapping("/{id}")
-public ResponseEntity<AcademicWork> updateWork(
-        @PathVariable Long id,
-        @RequestBody AcademicWork updatedWork,
-        @RequestParam Long teacherId) {
-    
-    Optional<AcademicWork> existingWork = workService.findById(id);
-    
-    if (existingWork.isPresent()) {
-        AcademicWork workToUpdate = existingWork.get();
-        
-        // Actualizamos las horas específicas
-        workToUpdate.setEstimatedWeeklyTime(updatedWork.getEstimatedWeeklyTime());
-        workToUpdate.setEstimatedSemiannualTime(updatedWork.getEstimatedSemiannualTime());
-        
-        // Asociar el trabajo al profesor específico
-        Teachers teacher = teachersService.getTeachersById(teacherId)
-                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
-        
-        AcademicWork savedWork = workService.save(workToUpdate, teacher);
-        
-        return ResponseEntity.ok(savedWork);
-    } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<AcademicWork> updateWork(
+            @PathVariable Long id,
+            @RequestBody AcademicWork updatedWork,
+            @RequestParam Long teacherId) {
+
+        Optional<AcademicWork> existingWork = workService.findById(id);
+
+        if (existingWork.isPresent()) {
+            AcademicWork workToUpdate = existingWork.get();
+
+            // Actualizamos las horas específicas
+            workToUpdate.setEstimatedWeeklyTime(updatedWork.getEstimatedWeeklyTime());
+            workToUpdate.setEstimatedSemiannualTime(updatedWork.getEstimatedSemiannualTime());
+
+            // Asociar el trabajo al profesor específico
+            Teachers teacher = teachersService.getTeachersById(teacherId)
+                    .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+            AcademicWork savedWork = workService.save(workToUpdate, teacher);
+
+            return ResponseEntity.ok(savedWork);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-}
 
 }
-
