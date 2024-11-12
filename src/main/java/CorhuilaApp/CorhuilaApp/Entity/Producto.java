@@ -1,5 +1,7 @@
 package CorhuilaApp.CorhuilaApp.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +24,6 @@ public class Producto {
 
     @ManyToOne
     @JoinColumn(name = "academic_work_id", nullable = false)
+    @JsonIgnore
     private AcademicWork academicWork;
 }

@@ -3,7 +3,7 @@ package CorhuilaApp.auxClass;
 public class ProductoDTO {
     private String nombre;
     private String descripcion;
-    private Long academicWorkId;
+   
 
     public String getNombre() {
         return nombre;
@@ -21,11 +21,5 @@ public class ProductoDTO {
         this.descripcion = descripcion;
     }
 
-    public Long getAcademicWorkId() {
-        return academicWorkId;
-    }
-
-    public void setAcademicWorkId(Long academicWorkId) {
-        this.academicWorkId = academicWorkId;
-    }
+   
 }
